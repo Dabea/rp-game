@@ -1,3 +1,6 @@
+const fighterView = function (fighter){
+    const fighterTemplate = `123`;
+}
 const BattleSystem = function (attacker, defender) {
     // confrim attackher and defender are part of the Fighter Class
     if(   !(attacker instanceof Fighter) ||  !(defender instanceof Fighter)  ){
@@ -8,19 +11,17 @@ const BattleSystem = function (attacker, defender) {
     alert(`${attacker.name}  Challages ${defender.name}`);
     console.log(defender);
     defender.takeDammage(attacker.atack);
-    alert(`${attacker.name}  dose ${attacker.atack} dammge to ${defender.name}, ${defender.name} has ${defender.hp}Hp left `);
+    alert(`${attacker.name}  dose ${attacker.atack} dammge to ${defender.name}, ${defender.name} has ${defender.hp}Hp left`);
     attacker.increaseAttack();
     alert(`${attacker.name}  battle enrages and gains ${attacker.baseAttack} and now has ${attacker.atack}`);
     attacker.takeDammage(defender.counter);
-    alert(`${defender.name} counter attacks and dose ${defender.counter} and now ${attacker.name} has ${attacker.hp}Hp left  `)
-    
-    
+    alert(`${defender.name} counter attacks and dose ${defender.counter} and now ${attacker.name} has ${attacker.hp}Hp left`);
 }
 
 /** Figher Class */
 const data = [
-     {'name': 'Obi-Wan', 'img': 'obi-wan.jpg', 'hp': 120, 'atack': 5,  'counter' : 15 },
-     {'name': 'Luke', 'img': 'luke.jpg', 'hp': 100, 'atack': 25,  'counter' : 5 }
+     {'name': 'Obi-Wan', 'img': 'obi-wan.jpg', 'hp': 120, 'atack': 5,  'counter' : 15, 'faction': 'jedi' },
+     {'name': 'Luke', 'img': 'luke.jpg', 'hp': 100, 'atack': 25,  'counter' : 5, 'faction': 'jedi' }
 ];
 
 const Fighter = function (){
@@ -50,15 +51,14 @@ Fighter.prototype.takeDammage = function(dammage){
 }
 
 
+
+
+
+
 const obi = new Fighter();
 const luke = new Fighter();
 obi.create(data[0]);
 luke.create(data[1]);
 
 
-BattleSystem(obi , luke);
-BattleSystem(obi , luke);
-BattleSystem(obi , luke);
-BattleSystem(obi , luke);
-BattleSystem(obi , luke);
-BattleSystem(obi , luke);
+
