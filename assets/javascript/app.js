@@ -1,6 +1,6 @@
 const fighterView = function (fighter){
     console.log(fighter);
-    const fighterTemplate = `<div class="panel">
+    const fighterTemplate = `<div class="panel fighter-js">
     <div class="panel-head">${fighter.name}</div> 
     <div class="panel-body"><img class="panel-image" src="./assets/img/${fighter.img}" alt="">
         <div>Hp: ${fighter.hp}</div>
@@ -15,6 +15,8 @@ const RpGame = function() {
     this.chosenPlayer = null;
 
 }
+
+
 /**
  * Sets the chosen player
  * 
@@ -23,12 +25,45 @@ const RpGame = function() {
  * @param {Fighter} figher 
  */
 RpGame.prototype._setChosenPlayer = function (figher){
-    if(   !(attacker instanceof Fighter) ||  !(defender instanceof Fighter)  ){
-        console.error('failure to set Play must be fighter Class');
-        return
-    }
+    //if(   !(attacker instanceof Fighter) ||  !(defender instanceof Fighter)  ){
+      //  console.error('failure to set Play must be fighter Class');
+       // return
+   // }
     this.chosenPlayer = fighter;
+
 }
+
+/**
+ * Sets the chosen player
+ * 
+ * @method chosePlayer
+ * @for Rpgame
+ * @param {Fighter} figher 
+ */
+RpGame.prototype.enable = function (){
+    this.prepareFighter = this.prepareFighter.bind(this);
+    $('.fighter-js').on('click', this.prepareFighter )
+}
+
+RpGame.prototype.prepareFighter = function(event){
+ const $target = event.target.closest('.fighter-js');
+ event.target.closest('.fighter-js').remove();
+ alert(this.chosenPlayer);
+ if(this.chosenPlayer === null) {
+    $('.player').append($target)
+    alert('a hero is chosen')
+    this.chosenPlayer = 'test';
+    return
+ }
+
+
+ $('.opponet').append($target)
+    alert('a Enime is chosen')
+    
+ }
+
+
+  
 
 /**
  *  Runs though the battle
@@ -91,8 +126,6 @@ Fighter.prototype.takeDammage = function(dammage){
 
 
 
-
-
 const obi = new Fighter();
 const luke = new Fighter();
 
@@ -101,5 +134,10 @@ obi.create(data[0]);
 luke.create(data[1]);
 fighterView(obi);
 fighterView(luke);
+
+
+const game = new RpGame();
+game.enable();
+
 
 

@@ -29,7 +29,14 @@ body {
 
  .battlefeild {
      clear: both;
+     overflow: auto;
      width: 80%;
      background: rebeccapurple;
      
+ }
+
+ .player{
+     display: block;
+     height: 250px;
+
  }
