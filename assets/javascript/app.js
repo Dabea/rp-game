@@ -13,7 +13,26 @@ $('.player-select').append(fighterTemplate);
 
 const RpGame = function() {
     this.chosenPlayer = null;
+    this.opponet = null;
+    this.fighterCollection = [];
+    this.generateFighterCollection();
+    this.fighterCollection
+   
+}
 
+RpGame.prototype.generateFighterCollection = function (){
+    for(let i = 0; i < data.length; i++){
+        let fighter = new Fighter();
+        fighter.create(data[i]);
+        fighterView(fighter);
+        this.fighterCollection.push(fighter);
+    }
+
+    const findIndex = this.fighterCollection.findIndex(function(key){
+        console.log(key.name);
+        return key.name === '';
+    })
+    console.log(findIndex);
 }
 
 
@@ -42,25 +61,45 @@ RpGame.prototype._setChosenPlayer = function (figher){
  */
 RpGame.prototype.enable = function (){
     this.prepareFighter = this.prepareFighter.bind(this);
-    $('.fighter-js').on('click', this.prepareFighter )
+    $('.fighter-js').on('click', this.prepareFighter)
 }
 
+/**
+ * 
+ * @param {*} event 
+ */
 RpGame.prototype.prepareFighter = function(event){
- const $target = event.target.closest('.fighter-js');
- event.target.closest('.fighter-js').remove();
- alert(this.chosenPlayer);
- if(this.chosenPlayer === null) {
-    $('.player').append($target)
-    alert('a hero is chosen')
-    this.chosenPlayer = 'test';
-    return
- }
+    const $target = $(event.target).closest('.fighter-js');
+    event.target.closest('.fighter-js').remove();
+    if(this.chosenPlayer === null) {
+        $('.player').append($target)
+        console.log($target);
+        $target.off();
+        this.chosenPlayer = 'test';
+        return
+    }
+    if(this.opponet === null){
+        $('.opponet').append($target)
+        $target.off();
+        this.enableAttack();
+        return
+    }
+}
 
+RpGame.prototype.enableAttack = function () {
+    $('.attack-js').on('click', function(){
 
- $('.opponet').append($target)
-    alert('a Enime is chosen')
-    
- }
+    })
+}
+
+RpGame.prototype.disableAttack = function () {
+    $('.attack-js').off();
+}
+
+RpGame.prototype.fight = function () {
+
+}
+
 
 
   
@@ -125,15 +164,6 @@ Fighter.prototype.takeDammage = function(dammage){
 
 
 
-
-const obi = new Fighter();
-const luke = new Fighter();
-
-
-obi.create(data[0]);
-luke.create(data[1]);
-fighterView(obi);
-fighterView(luke);
 
 
 const game = new RpGame();
