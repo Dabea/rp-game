@@ -1,6 +1,5 @@
 const fighterView = function (fighter){
-    console.log(fighter);
-    const fighterTemplate = `<div class="panel fighter-js">
+    const fighterTemplate = `<div class="panel fighter-js" data-name="${fighter.name}" >
     <div class="panel-head">${fighter.name}</div> 
     <div class="panel-body"><img class="panel-image" src="./assets/img/${fighter.img}" alt="">
         <div>Hp: ${fighter.hp}</div>
@@ -8,7 +7,7 @@ const fighterView = function (fighter){
         <div>Faction: ${fighter.faction}</div>
     </div>
 </div>`;
-$('.player-select').append(fighterTemplate);
+return fighterTemplate;
 }
 
 const RpGame = function() {
@@ -16,23 +15,16 @@ const RpGame = function() {
     this.opponet = null;
     this.fighterCollection = [];
     this.generateFighterCollection();
-    this.fighterCollection
-   
 }
 
 RpGame.prototype.generateFighterCollection = function (){
     for(let i = 0; i < data.length; i++){
         let fighter = new Fighter();
         fighter.create(data[i]);
-        fighterView(fighter);
+        let fighterTemplate = fighterView(fighter);
+        $('.player-select').append(fighterTemplate);
         this.fighterCollection.push(fighter);
     }
-
-    const findIndex = this.fighterCollection.findIndex(function(key){
-        console.log(key.name);
-        return key.name === '';
-    })
-    console.log(findIndex);
 }
 
 
@@ -65,31 +57,33 @@ RpGame.prototype.enable = function (){
 }
 
 /**
- * 
+ * @method prepareFighter
  * @param {*} event 
  */
 RpGame.prototype.prepareFighter = function(event){
     const $target = $(event.target).closest('.fighter-js');
-    event.target.closest('.fighter-js').remove();
     if(this.chosenPlayer === null) {
+        event.target.closest('.fighter-js').remove();
         $('.player').append($target)
-        console.log($target);
         $target.off();
-        this.chosenPlayer = 'test';
+        this.chosenPlayer = this.findFighter($target.data('name'));
         return
     }
     if(this.opponet === null){
+        event.target.closest('.fighter-js').remove();
         $('.opponet').append($target)
         $target.off();
         this.enableAttack();
+        this.opponet = this.findFighter($target.data('name'));
         return
     }
+
+    alert('you must deal with your current opponet');
 }
 
 RpGame.prototype.enableAttack = function () {
-    $('.attack-js').on('click', function(){
-
-    })
+    this.fight = this.fight.bind(this);
+    $('.attack-js').on('click', this.fight )
 }
 
 RpGame.prototype.disableAttack = function () {
@@ -97,7 +91,53 @@ RpGame.prototype.disableAttack = function () {
 }
 
 RpGame.prototype.fight = function () {
+    BattleSystem(this.chosenPlayer, this.opponet)
+    //handel Player
+  
 
+    //handel Opponet
+    if(this.opponet.hp <= 0){
+        $('.opponet').empty();
+        this.opponet = null;
+    }else{
+        const opponetighterTemplate = fighterView(this.opponet);
+        $('.opponet').empty();
+        $('.opponet').append(opponetighterTemplate);
+    }
+
+    if(this.chosenPlayer.hp <= 0 && this.opponet.hp > 0) {
+        $('.player').empty();
+       // this.gameOver();
+    }else{
+        $('.player').empty();
+        const chosenFighterTemplate = fighterView(this.chosenPlayer);
+        $('.player').append(chosenFighterTemplate);
+    }
+
+    if(this.fighterCollection.length === 0){
+        alert('You Win');
+    }
+    if(this.chosenPlayer.hp <= 0){
+        alert('game OVer');
+    }
+    console.log(this.fighterCollection)
+
+}
+
+/**
+ *  Will find the wanted finghter by the given name
+ * 
+ * @method findFighter
+ * @param {*} name 
+ * 
+ */
+RpGame.prototype.findFighter = function (name){
+    const foundIndex = this.fighterCollection.findIndex(function(key){
+        return key.name === name;
+    })
+
+    foundFighter = this.fighterCollection.map(fighter => fighter.name === name);
+    return this.fighterCollection[foundIndex]
 }
 
 
@@ -118,20 +158,20 @@ const BattleSystem = function (attacker, defender) {
         return
     }
 
-    alert(`${attacker.name}  Challages ${defender.name}`);
-    console.log(defender);
+    //alert(`${attacker.name}  Challages ${defender.name}`);
     defender.takeDammage(attacker.attack);
-    alert(`${attacker.name}  dose ${attacker.attack} dammge to ${defender.name}, ${defender.name} has ${defender.hp}Hp left`);
+    //alert(`${attacker.name}  dose ${attacker.attack} dammge to ${defender.name}, ${defender.name} has ${defender.hp}Hp left`);
     attacker.increaseAttack();
-    alert(`${attacker.name}  battle enrages and gains ${attacker.baseAttack} and now has ${attacker.attack}`);
+    //alert(`${attacker.name}  battle enrages and gains ${attacker.baseAttack} and now has ${attacker.attack}`);
     attacker.takeDammage(defender.counter);
-    alert(`${defender.name} counter attacks and dose ${defender.counter} and now ${attacker.name} has ${attacker.hp}Hp left`);
+    //alert(`${defender.name} counter attacks and dose ${defender.counter} and now ${attacker.name} has ${attacker.hp}Hp left`);
 }
 
 /** Figher Class */
 const data = [
-     {'name': 'Obi-Wan', 'img': 'obi-wan.jpg', 'hp': 120, 'attack': 5,  'counter' : 15, 'faction': 'jedi' },
-     {'name': 'Luke', 'img': 'luke.jpeg', 'hp': 100, 'attack': 25,  'counter' : 5, 'faction': 'jedi' }
+     {'name': 'Obi-Wan', 'img': 'obi-wan.jpg', 'hp': 120, 'attack': 5,  'counter' : 20, 'faction': 'jedi' },
+     {'name': 'Luke', 'img': 'luke.jpeg', 'hp': 100, 'attack': 15,  'counter' : 10, 'faction': 'jedi' },
+     {'name': 'Darth Vader', 'img': 'vader.jpeg', 'hp': 60, 'attack': 30,  'counter' : 25, 'faction': 'Sith' }
 ];
 
 const Fighter = function (){

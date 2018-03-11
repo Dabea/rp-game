@@ -1,7 +1,9 @@
-body {
-    background: blue;
-}
-
+html {
+    background: url(../img/image4.jpg) no-repeat center center fixed;
+    background-size: cover;
+    height: 100%;
+    overflow: hidden;
+  }
 .panel {
     width:30%;
     max-width: 125px;
@@ -31,7 +33,7 @@ body {
      clear: both;
      overflow: auto;
      width: 80%;
-     background: rebeccapurple;
+     border: 1px solid red;
      
  }
 
