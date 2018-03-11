@@ -15,6 +15,8 @@ const RpGame = function() {
     this.opponet = null;
     this.fighterCollection = [];
     this.generateFighterCollection();
+    this.victoryCount = 0;
+    this.SELECTOR = {player: '.player', opponet: '.opponet'}
 }
 
 RpGame.prototype.generateFighterCollection = function (){
@@ -63,22 +65,28 @@ RpGame.prototype.enable = function (){
 RpGame.prototype.prepareFighter = function(event){
     const $target = $(event.target).closest('.fighter-js');
     if(this.chosenPlayer === null) {
-        event.target.closest('.fighter-js').remove();
-        $('.player').append($target)
-        $target.off();
-        this.chosenPlayer = this.findFighter($target.data('name'));
+       this.selectPlayer($target, 'player');
+       this.chosenPlayer = this.findFighter($target.data('name'));
         return
     }
     if(this.opponet === null){
-        event.target.closest('.fighter-js').remove();
-        $('.opponet').append($target)
-        $target.off();
+        this.selectPlayer($target, 'opponet')
         this.enableAttack();
         this.opponet = this.findFighter($target.data('name'));
         return
     }
 
     alert('you must deal with your current opponet');
+}
+
+RpGame.prototype.selectPlayer = function($target, owner) {
+    console.log();
+    $target.closest('.fighter-js').remove();
+    $(this.SELECTOR[owner]).append($target)
+    $target.off();
+    this[owner] = this.findFighter($target.data('name'));
+    console.log(this.opponet);
+    console.log(this.player);
 }
 
 RpGame.prototype.enableAttack = function () {
@@ -94,7 +102,15 @@ RpGame.prototype.fight = function () {
     BattleSystem(this.chosenPlayer, this.opponet)
     //handel Player
   
+    if(this.chosenPlayer.hp <= 0 && this.opponet.hp > 0) {
 
+        this.gameOver();
+        $('.player').empty();
+     }else{
+         $('.player').empty();
+         const chosenFighterTemplate = fighterView(this.chosenPlayer);
+         $('.player').append(chosenFighterTemplate);
+     }
     //handel Opponet
     if(this.opponet.hp <= 0){
         $('.opponet').empty();
@@ -105,20 +121,13 @@ RpGame.prototype.fight = function () {
         $('.opponet').append(opponetighterTemplate);
     }
 
-    if(this.chosenPlayer.hp <= 0 && this.opponet.hp > 0) {
-        $('.player').empty();
-       // this.gameOver();
-    }else{
-        $('.player').empty();
-        const chosenFighterTemplate = fighterView(this.chosenPlayer);
-        $('.player').append(chosenFighterTemplate);
-    }
-
     if(this.fighterCollection.length === 0){
         alert('You Win');
     }
     if(this.chosenPlayer.hp <= 0){
-        alert('game OVer');
+        alert('game OVer 123');
+        $('.model').removeClass('hidden');
+        console.log($('.model'))
     }
     console.log(this.fighterCollection)
 
