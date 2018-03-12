@@ -33,7 +33,7 @@ html {
      clear: both;
      overflow: auto;
      width: 80%;
-     border: 1px solid red;
+
      
  }
 
@@ -82,4 +82,33 @@ html {
 
  .m-top20 {
      margin-top: 20%
+ }
+
+ /* Crystal Lab *****/
+ .crystal-lab{
+    display: block;
+    height: 200px;
+    width: 300px;
+    background: red;
+ }
+
+ .crystal-img {
+     width: 30px;
+     height: 30px;
+ }
+ .crystal {
+     background: green;
+     width:70px;
+     height:50px;
+     float: left;
+     margin: 10px;
+ }
+
+ .frequency-display {
+     display: block;
+     width: 100px;
+     height: 100px;
+     background: blue;
+     color:wheat;
+     
  }
