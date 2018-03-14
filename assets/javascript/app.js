@@ -1,3 +1,9 @@
+/**
+ *  Generates the template for the the fighers to be displayed on the page
+ * 
+ * @method figherView
+ * @param {*} fighter 
+ */
 const fighterView = function (fighter){
     const fighterTemplate = `<div class="panel fighter-js" data-name="${fighter.name}" >
     <div class="panel-head">${fighter.name}</div> 
@@ -10,6 +16,11 @@ const fighterView = function (fighter){
 return fighterTemplate;
 }
 
+/**
+ * construcotr for RP game 
+ * 
+ * @Constructor
+ */
 const RpGame = function() {
     this.chosenPlayer = null;
     this.opponet = null;
@@ -19,6 +30,12 @@ const RpGame = function() {
     this.SELECTOR = {player: '.player', opponet: '.opponet'}
 }
 
+/**
+ *  Generates the list of the available fighters from the avitabile data
+ * 
+ * @for Rpgame
+ * @method generateFighterCollection
+ */
 RpGame.prototype.generateFighterCollection = function (){
     for(let i = 0; i < data.length; i++){
         let fighter = new Fighter();
@@ -29,7 +46,6 @@ RpGame.prototype.generateFighterCollection = function (){
     }
 }
 
-
 /**
  * Sets the chosen player
  * 
@@ -38,6 +54,7 @@ RpGame.prototype.generateFighterCollection = function (){
  * @param {Fighter} figher 
  */
 RpGame.prototype._setChosenPlayer = function (figher){
+    /***   Need to enable a check that the class is be created byt the correct classes */
     //if(   !(attacker instanceof Fighter) ||  !(defender instanceof Fighter)  ){
       //  console.error('failure to set Play must be fighter Class');
        // return
@@ -59,6 +76,8 @@ RpGame.prototype.enable = function (){
 }
 
 /**
+ *  Gathers all the infomatino needed for the fighters to engage in combat
+ * 
  * @method prepareFighter
  * @param {*} event 
  */
@@ -79,31 +98,50 @@ RpGame.prototype.prepareFighter = function(event){
     alert('you must deal with your current opponet');
 }
 
+/**
+ *  Select the avtive  player
+ * 
+ * @param {*}  
+ * @param {*} owner 
+ */
 RpGame.prototype.selectPlayer = function($target, owner) {
-    console.log();
     $target.closest('.fighter-js').remove();
     $(this.SELECTOR[owner]).append($target)
     $target.off();
     this[owner] = this.findFighter($target.data('name'));
-    console.log(this.opponet);
-    console.log(this.player);
 }
 
+/**
+ *  creates the attack event listner to attack
+ * 
+ * @for Rpgame
+ * @method enableAttack
+ */
 RpGame.prototype.enableAttack = function () {
     this.fight = this.fight.bind(this);
     $('.attack-js').on('click', this.fight )
 }
 
+/**
+ *  disables the attack event listner
+ * 
+ * @for Rpgame
+ * @method disableAttack
+ */
 RpGame.prototype.disableAttack = function () {
     $('.attack-js').off();
 }
 
+/**
+ *  Gathers infomation for the game for the battle ahaed
+ * 
+ * @for RPgame
+ * @method fight
+ */
 RpGame.prototype.fight = function () {
     BattleSystem(this.chosenPlayer, this.opponet)
     //handel Player
-  
     if(this.chosenPlayer.hp <= 0 && this.opponet.hp > 0) {
-
         this.gameOver();
         $('.player').empty();
      }else{
@@ -125,12 +163,9 @@ RpGame.prototype.fight = function () {
         alert('You Win');
     }
     if(this.chosenPlayer.hp <= 0){
-        alert('game OVer 123');
+        alert('game Over');
         $('.model').removeClass('hidden');
-        console.log($('.model'))
     }
-    console.log(this.fighterCollection)
-
 }
 
 /**
@@ -149,10 +184,6 @@ RpGame.prototype.findFighter = function (name){
     return this.fighterCollection[foundIndex]
 }
 
-
-
-  
-
 /**
  *  Runs though the battle
  * 
@@ -166,7 +197,6 @@ const BattleSystem = function (attacker, defender) {
         console.error('failure to instantiate Class');
         return
     }
-
     //alert(`${attacker.name}  Challages ${defender.name}`);
     defender.takeDammage(attacker.attack);
     //alert(`${attacker.name}  dose ${attacker.attack} dammge to ${defender.name}, ${defender.name} has ${defender.hp}Hp left`);
@@ -176,13 +206,16 @@ const BattleSystem = function (attacker, defender) {
     //alert(`${defender.name} counter attacks and dose ${defender.counter} and now ${attacker.name} has ${attacker.hp}Hp left`);
 }
 
-/** Figher Class */
+/** Figher Class data */
 const data = [
      {'name': 'Obi-Wan', 'img': 'obi-wan.jpg', 'hp': 120, 'attack': 5,  'counter' : 20, 'faction': 'jedi' },
      {'name': 'Luke', 'img': 'luke.jpeg', 'hp': 100, 'attack': 15,  'counter' : 10, 'faction': 'jedi' },
      {'name': 'Darth Vader', 'img': 'vader.jpeg', 'hp': 60, 'attack': 30,  'counter' : 25, 'faction': 'Sith' }
 ];
 
+/**
+ * Fighter constructor builds initates and sets up the  fighter class
+ */
 const Fighter = function (){
     this.name = null;
     this.img = null;
@@ -193,6 +226,13 @@ const Fighter = function (){
     this.faction = null;
 }
 
+/**
+ *  Creats and gives values to the fighers
+ * 
+ * @for Fighter
+ * @method create
+ * @param {*} fighterBio 
+ */
 Fighter.prototype.create = function(fighterBio) {
     this.name = fighterBio.name;
     this.img = fighterBio.img;
@@ -203,16 +243,26 @@ Fighter.prototype.create = function(fighterBio) {
     this.faction = fighterBio.faction;
 }
 
+/**
+ * Increases the Attack of the fighter
+ * 
+ * @for fighter
+ * @method increaseAttack
+ */
 Fighter.prototype.increaseAttack = function() {
     this.attack = this.attack + this.baseAttack;
 }
 
+/**
+ * Reduces the Hp of a figter
+ * 
+ * @for Figher
+ * @method takeDammage
+ * @param {*} dammage 
+ */
 Fighter.prototype.takeDammage = function(dammage){
     this.hp = this.hp - dammage;
 }
-
-
-
 
 
 const game = new RpGame();
